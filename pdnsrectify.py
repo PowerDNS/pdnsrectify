@@ -172,9 +172,16 @@ def main():
                             print rec, 'has NULL ordername while auth'
                         elif rec.ordername != hashed[rec.name]:
                             print rec, 'has wrong ordername (should be %s)' % (hashed[rec.name])
+                    else:
+                        if rec.ordername is not None:
+                            print rec, 'has non-NULL ordername while not auth'
             else: # not nsec3
-                if (rec.auth or rec.type == 'NS') and rec.type is not None and rec.ordername is None:
-                    print rec, 'has NULL ordername'
+                if (rec.auth or rec.type == 'NS') and rec.type is not None:
+                    if rec.ordername is None:
+                        print rec, 'has NULL ordername'
+                else:
+                    if rec.ordername is not None:
+                        print rec, 'has non-NULL ordername inside delegation occlusion'
                 if rec.ordername is not None:
                     if rec.ordername != reverse(rec.name, domain):
                         print rec, 'has wrong ordername'
